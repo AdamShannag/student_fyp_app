@@ -14,6 +14,6 @@ class Lecturer extends Model
     }
 
     public function projects(){
-        return $this->belongsToMany(Project::class,'lecturer_project');
+        return $this->belongsToMany(Project::class,'lecturer_project')->withPivot(['job']);
     }
 }
