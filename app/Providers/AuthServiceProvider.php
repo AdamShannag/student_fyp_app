@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +28,28 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('list-projects', function (User $user) {
+            return $user->userLevel > 0;
+        });
+        Gate::define('edit-project', function (User $user) {
+            return $user->userLevel > 0;
+        });
+        Gate::define('update-project', function (User $user) {
+            return $user->userLevel > 0;
+        });
+        Gate::define('show-project', function (User $user) {
+            return $user->userLevel > 0;
+        });
+        Gate::define('projects', function (User $user) {
+            return $user->userLevel < 3;
+        });
+
+        Gate::define('lecturers', function (User $user) {
+            return $user->userLevel === 1;
+        });
+
+        Gate::define('students', function (User $user) {
+            return $user->userLevel === 1;
+        });
     }
 }

@@ -20,6 +20,7 @@
                 </ul>
             </div>
         @endif
+        <?php $level = Auth::user()->userLevel; ?>
         <div class="block p-6 rounded-lg shadow-lg bg-white ">
             <form method="POST" action="{{ route('project.update', $project->id) }}">
                 @method('PUT')
@@ -47,7 +48,9 @@
                     </div>
                     <div class="form-group mb-4">
                         <label class="text-gray-700">Student</label>
-                        <select name="student_id"
+                        <input type="hidden" name="student_id" value={{ $current_student->id }}
+                            @if ($level <= 2) disabled @endif>
+                        <select @if ($level > 2) disabled @endif name="student_id"
                             class="form-select appearance-none
                         block
                         w-full
@@ -148,7 +151,9 @@
                 </div>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Supervisor</label>
-                    <select name="supervisor_id"
+                    <input type="hidden" name="supervisor_id" value={{ $project->lecturers[0]->id }}
+                        @if ($level <= 2) disabled @endif>
+                    <select @if ($level > 2) disabled @endif name="supervisor_id"
                         class="form-select appearance-none
                     block
                     w-full
@@ -176,7 +181,9 @@
                 </div>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Examiner 1</label>
-                    <select name="examiner_1_id"
+                    <input type="hidden" name="examiner_1_id" value={{ $project->lecturers[1]->id }}
+                        @if ($level <= 2) disabled @endif>
+                    <select @if ($level > 2) disabled @endif name="examiner_1_id"
                         class="form-select appearance-none
                     block
                     w-full
@@ -203,7 +210,9 @@
                 </div>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Examiner 2</label>
-                    <select name="examiner_2_id"
+                    <input type="hidden" name="examiner_2_id" value={{ $project->lecturers[2]->id }}
+                        @if ($level <= 2) disabled @endif>
+                    <select @if ($level > 2) disabled @endif name="examiner_2_id"
                         class="form-select appearance-none
                     block
                     w-full

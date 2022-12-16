@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lecturer;
-use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LecturerController extends Controller
 {
@@ -16,7 +17,11 @@ class LecturerController extends Controller
     public function index()
     {
         $lecturers = Lecturer::with('projects')->get();
-        return view('lecturer.index', compact('lecturers'));
+        if (Gate::allows('lecturers', $lecturers)) {
+            return view('lecturer.index', compact('lecturers'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -26,7 +31,11 @@ class LecturerController extends Controller
      */
     public function create()
     {
-        return view('lecturer.create');
+        if (Gate::allows('lecturers')) {
+            return view('lecturer.create');
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -37,16 +46,18 @@ class LecturerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-        ]);
-
-        Lecturer::create($request->all());
-        return redirect()->route('lecturer.index')->with('success',"Lectruer created successfully!");
-
+        if (Gate::allows('lecturers')) {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+            ]);
+            Lecturer::create($request->all());
+            return redirect()->route('lecturer.index')->with('success', "Lectruer created successfully!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -57,8 +68,11 @@ class LecturerController extends Controller
      */
     public function show(Lecturer $lecturer)
     {
-        return view('lecturer.show', compact('lecturer'));
-
+        if (Gate::allows('lecturers')) {
+            return view('lecturer.show', compact('lecturer'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -69,8 +83,11 @@ class LecturerController extends Controller
      */
     public function edit(Lecturer $lecturer)
     {
-        return view('lecturer.edit', compact('lecturer'));
-
+        if (Gate::allows('lecturers')) {
+            return view('lecturer.edit', compact('lecturer'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -82,16 +99,19 @@ class LecturerController extends Controller
      */
     public function update(Request $request, Lecturer $lecturer)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-        ]);
+        if (Gate::allows('lecturers')) {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+            ]);
 
-        $lecturer->update($request->all());
-        return redirect()->route('lecturer.index')->with('success',"Lecturer details updated!");
-
+            $lecturer->update($request->all());
+            return redirect()->route('lecturer.index')->with('success', "Lecturer details updated!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -102,8 +122,14 @@ class LecturerController extends Controller
      */
     public function destroy(Lecturer $lecturer)
     {
-        $lecturer->delete();
-        return redirect()->route('lecturer.index')->with('success',"Lecturer deleted!");
-
+        if (Gate::allows('lecturers')) {
+            $user = User::where('email', $lecturer->email)->first();
+            if ($user)
+                $user->delete();
+            $lecturer->delete();
+            return redirect()->route('lecturer.index')->with('success', "Lecturer deleted!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 }

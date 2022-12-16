@@ -17,6 +17,7 @@
                 </ul>
             </div>
         @endif
+        <?php $level = Auth::user()->userLevel; ?>
         <div class="block p-6 rounded-lg shadow-lg bg-white ">
             <h5 class="text-gray-900 text-xl leading-tight font-medium mb-4">{{ $project->title }}</h5>
             <hr>
@@ -67,7 +68,7 @@
             @endforeach
 
             <div class="flex justify-center">
-                <div class="grid grid-cols-3 gap-4 max-w-xl ">
+                <div class="grid grid-cols-2 @if ($level < 3) grid-cols-3 @endif  gap-4 max-w-xl ">
                     <a class="
             w-full
             px-7
@@ -87,7 +88,7 @@
             duration-150
             ease-in-out"
                         href="{{ route('project.index') }}">Back</a>
-                    <a  href="{{ route('project.edit', $project->id) }}"
+                    <a href="{{ route('project.edit', $project->id) }}"
                         class="
                 w-full
                 px-8
@@ -106,12 +107,14 @@
                 transition
                 duration-150
                 ease-in-out">Edit</a>
-                <form class="inline-block" action="{{route('project.destroy',$project->id)}}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                <button type="submit"
-                    onclick="return confirm('Are you sure you want to delete this project?')"
-                    class="w-full
+                    @if ($level < 3)
+                        <form class="inline-block" action="{{ route('project.destroy', $project->id) }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                onclick="return confirm('Are you sure you want to delete this project?')"
+                                class="w-full
                 px-6
                 py-3
                 bg-red-600
@@ -128,7 +131,8 @@
                 transition
                 duration-150
                 ease-in-out"">Delete</button>
-                </form>
+                        </form>
+                    @endif
 
 
                 </div>

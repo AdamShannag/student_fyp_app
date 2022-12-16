@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class StudentController extends Controller
 {
@@ -14,8 +15,13 @@ class StudentController extends Controller
      */
     public function index()
     {
+
         $students = Student::all();
-        return view('student.index', compact('students'));
+        if (Gate::allows('students', $students)) {
+            return view('student.index', compact('students'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -25,7 +31,11 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('student.create');
+        if (Gate::allows('students')) {
+            return view('student.create');
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -36,16 +46,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-        ]);
+        if (Gate::allows('students')) {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+            ]);
 
-        Student::create($request->all());
-        return redirect()->route('student.index')->with('success',"Student created successfully!");
-
+            Student::create($request->all());
+            return redirect()->route('student.index')->with('success', "Student created successfully!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -56,7 +69,11 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        return view('student.show', compact('student'));
+        if (Gate::allows('students')) {
+            return view('student.show', compact('student'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -67,8 +84,11 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        return view('student.edit', compact('student'));
-
+        if (Gate::allows('students')) {
+            return view('student.edit', compact('student'));
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -80,16 +100,19 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-        ]);
+        if (Gate::allows('students')) {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+            ]);
 
-        $student->update($request->all());
-        return redirect()->route('student.index')->with('success',"Student details updated!");
-
+            $student->update($request->all());
+            return redirect()->route('student.index')->with('success', "Student details updated!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 
     /**
@@ -100,8 +123,11 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        $student->delete();
-        return redirect()->route('student.index')->with('success',"Student deleted!");
-
+        if (Gate::allows('students')) {
+            $student->delete();
+            return redirect()->route('student.index')->with('success', "Student deleted!");
+        } else {
+            echo '<h2>Un-Authorized Access!</h2>';
+        }
     }
 }
