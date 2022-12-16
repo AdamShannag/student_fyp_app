@@ -14,7 +14,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Student::all();
+        return $students;
     }
 
     /**
@@ -24,7 +25,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('student.create');
     }
 
     /**
@@ -35,7 +36,15 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'phone_number' => 'required',
+        ]);
+
+        $lecturer = Student::create($request->all());
+        return $lecturer;
     }
 
     /**

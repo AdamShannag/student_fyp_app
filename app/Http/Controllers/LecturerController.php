@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lecturer;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class LecturerController extends Controller
@@ -14,7 +15,8 @@ class LecturerController extends Controller
      */
     public function index()
     {
-        //
+        $lecturers = Lecturer::with('projects')->get();
+        return $lecturers;
     }
 
     /**
@@ -24,7 +26,7 @@ class LecturerController extends Controller
      */
     public function create()
     {
-        //
+        return view('lecturer.create');
     }
 
     /**
@@ -35,7 +37,15 @@ class LecturerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'phone_number' => 'required',
+        ]);
+
+        $lecturer = Lecturer::create($request->all());
+        return $lecturer;
     }
 
     /**
