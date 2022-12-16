@@ -16,7 +16,7 @@ class LecturerController extends Controller
     public function index()
     {
         $lecturers = Lecturer::with('projects')->get();
-        return $lecturers;
+        return view('lecturer.index', compact('lecturers'));
     }
 
     /**
@@ -44,8 +44,9 @@ class LecturerController extends Controller
             'phone_number' => 'required',
         ]);
 
-        $lecturer = Lecturer::create($request->all());
-        return $lecturer;
+        Lecturer::create($request->all());
+        return redirect()->route('lecturer.index')->with('success',"Lectruer created successfully!");
+
     }
 
     /**
@@ -56,7 +57,8 @@ class LecturerController extends Controller
      */
     public function show(Lecturer $lecturer)
     {
-        //
+        return view('lecturer.show', compact('lecturer'));
+
     }
 
     /**
@@ -67,7 +69,8 @@ class LecturerController extends Controller
      */
     public function edit(Lecturer $lecturer)
     {
-        //
+        return view('lecturer.edit', compact('lecturer'));
+
     }
 
     /**
@@ -79,7 +82,16 @@ class LecturerController extends Controller
      */
     public function update(Request $request, Lecturer $lecturer)
     {
-        //
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'phone_number' => 'required',
+        ]);
+
+        $lecturer->update($request->all());
+        return redirect()->route('lecturer.index')->with('success',"Lecturer details updated!");
+
     }
 
     /**
@@ -90,6 +102,8 @@ class LecturerController extends Controller
      */
     public function destroy(Lecturer $lecturer)
     {
-        //
+        $lecturer->delete();
+        return redirect()->route('lecturer.index')->with('success',"Lecturer deleted!");
+
     }
 }

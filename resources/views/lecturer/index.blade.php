@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('All Projects') }}
+            {{ __('All Lecturers') }}
         </h2>
     </x-slot>
 
@@ -28,12 +28,12 @@
                 <div class="rounded-t mb-0 px-4 py-3 border-0">
                     <div class="flex flex-wrap items-center">
                       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-                        <h3 class="font-semibold text-base text-blueGray-700">Projects</h3>
+                        <h3 class="font-semibold text-base text-blueGray-700">Lecturers</h3>
                       </div>
                       <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
                         <a
                         class="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                        href="{{route('project.create')}}">New project</a>
+                        href="{{route('lecturer.create')}}">New Student</a>
                     </div>
                     </div>
                   </div>
@@ -41,29 +41,23 @@
 
 
                 <div class="block w-full overflow-x-auto">
-                    <table class="items-center bg-transparent w-full border-collapse ">
+                    <table class="items-center text-center bg-transparent w-full border-collapse ">
                         <thead class="border-b bg-gray-800">
                             <tr>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
                                     #
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Project title
+                                    First name
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Student
+                                    Last name
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Supervisor
+                                    Email
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Examiner 1
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Examiner 2
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                    Status
+                                     Phone number
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
                                     Actions
@@ -72,30 +66,25 @@
                         </thead class="border-b">
                         <tbody>
                             <?php $i = 1; ?>
-                            @foreach ($projects as $project)
+                            @foreach ($lecturers as $lecturer)
                                 <tr class="bg-white border-b">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $i++ }}</td>
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ $project->title }}
+                                        {{ $lecturer->first_name }}
                                     </td>
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        @foreach ($students as $student)
-                                            @if ($student->id === $project->student_id)
-                                                {{ $student->first_name }} {{ $student->last_name }}
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    @foreach ($project->lecturers as $lecturer)
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {{ $lecturer->first_name }} {{ $lecturer->last_name }}
-                                        </td>
-                                    @endforeach
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ $project->status }}
+                                        {{ $lecturer->last_name }}
                                     </td>
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('project.show', $project->id) }}"
+                                        {{ $lecturer->email }}
+                                    </td>
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        {{ $lecturer->phone_number }}
+                                    </td>
+
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        <a href="{{ route('lecturer.show', $lecturer->id) }}"
                                             class="w-full
                                         px-6
                                         py-2.5
@@ -113,7 +102,7 @@
                                         transition
                                         duration-150
                                         ease-in-out"">Show</a>
-                                        <a href="{{ route('project.edit', $project->id) }}"
+                                        <a href="{{ route('lecturer.edit', $lecturer->id) }}"
                                             class="w-full
                                         px-6
                                         py-2.5
@@ -131,11 +120,11 @@
                                         transition
                                         duration-150
                                         ease-in-out"">Edit</a>
-                                        <form class="inline-block" action="{{route('project.destroy',$project->id)}}" method="POST">
+                                        <form class="inline-block" action="{{route('lecturer.destroy',$lecturer->id)}}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                         <button type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this project?')"
+                                            onclick="return confirm('Are you sure you want to delete this lecturer?')"
                                             class="w-full
                                         px-6
                                         py-2.5

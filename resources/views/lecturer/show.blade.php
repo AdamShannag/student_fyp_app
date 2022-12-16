@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('View project') }}
+            {{ __('View lecturer') }}
         </h2>
     </x-slot>
 
@@ -18,54 +18,14 @@
             </div>
         @endif
         <div class="block p-6 rounded-lg shadow-lg bg-white ">
-            <h5 class="text-gray-900 text-xl leading-tight font-medium mb-4">{{ $project->title }}</h5>
+            <h5 class="text-gray-900 text-xl leading-tight font-medium mb-4">{{ $lecturer->first_name }} {{ $lecturer->last_name }}</h5>
             <hr>
             <p class="text-gray-700 text-base mb-4 mt-4">
-                <strong>Project start date: </strong>
-                @if ($project->start_date)
-                    {{ $project->start_date }}
-                @else
-                    Not set
-                @endif
+                <strong>Email: </strong> {{ $lecturer->email }}
             </p>
             <p class="text-gray-700 text-base mb-4">
-                <strong>Project end date: </strong>
-                @if ($project->end_date)
-                    {{ $project->end_date }}
-                @else
-                    Not set
-                @endif
+                <strong>Phone number: </strong> {{ $lecturer->phone_number }}
             </p>
-            <p class="text-gray-700 text-base mb-4">
-                <strong>Project duration: </strong>
-                @if ($project->duration)
-                    {{ $project->duration }} months
-                @else
-                    Not set
-                @endif
-            </p>
-            <p class="text-gray-700 text-base mb-4">
-                <strong>Project progress: </strong> {{ $project->progress }}
-            </p>
-            <p class="text-gray-700 text-base mb-4">
-                <strong>Project status:</strong> {{ $project->status }}
-            </p>
-            <p class="text-gray-700 text-base mb-4">
-                <strong>Student: </strong> {{ $student->first_name }} {{ $student->last_name }}
-            </p>
-            <?php $i = 0; ?>
-            @foreach ($project->lecturers as $lecturer)
-                <p class="text-gray-700 text-base mb-4">
-                    @if ($i === 0)
-                        <strong>Supervisor:</strong> {{ $lecturer->first_name }} {{ $lecturer->last_name }}
-                    @else
-                        <strong>Examiner {{ $i }}: </strong> {{ $lecturer->first_name }}
-                        {{ $lecturer->last_name }}
-                    @endif
-                    <?php $i++; ?>
-                </p>
-            @endforeach
-
             <div class="flex justify-center">
                 <div class="grid grid-cols-3 gap-4 max-w-xl ">
                     <a class="
@@ -86,8 +46,8 @@
             transition
             duration-150
             ease-in-out"
-                        href="{{ route('project.index') }}">Back</a>
-                    <a  href="{{ route('project.edit', $project->id) }}"
+                        href="{{ route('lecturer.index') }}">Back</a>
+                    <a  href="{{ route('lecturer.edit', $lecturer->id) }}"
                         class="
                 w-full
                 px-8
@@ -106,11 +66,11 @@
                 transition
                 duration-150
                 ease-in-out">Edit</a>
-                <form class="inline-block" action="{{route('project.destroy',$project->id)}}" method="POST">
+                <form class="inline-block" action="{{route('lecturer.destroy',$lecturer->id)}}" method="POST">
                     @csrf
                     @method('DELETE')
                 <button type="submit"
-                    onclick="return confirm('Are you sure you want to delete this project?')"
+                    onclick="return confirm('Are you sure you want to delete this lecturer?')"
                     class="w-full
                 px-6
                 py-3
@@ -129,8 +89,6 @@
                 duration-150
                 ease-in-out"">Delete</button>
                 </form>
-
-
                 </div>
             </div>
 </x-app-layout>
