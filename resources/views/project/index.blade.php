@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="block w-full overflow-x-auto">
-                    <table class="items-center bg-transparent w-full border-collapse ">
+                    <table class="items-center text-center bg-transparent w-full border-collapse ">
                         <thead class="border-b bg-gray-800">
                             <tr>
                                 <th scope="col" class="text-sm font-medium text-white px-6 py-4">
@@ -81,7 +81,19 @@
                                             @endif
                                         @endforeach
                                     </td>
-                                    @foreach ($project->lecturers as $lecturer)
+                                    <?php $supervisor = $project
+                                        ->lecturers()
+                                        ->where('job', 'supervisor')
+                                        ->get()[0]; ?>
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        {{ $supervisor->first_name }} {{ $supervisor->last_name }}
+                                    </td>
+                                    <?php $examiners = $project
+                                        ->lecturers()
+                                        ->where('job', 'examiner')
+                                        ->get(); ?>
+
+                                    @foreach ($examiners as $lecturer)
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                             {{ $lecturer->first_name }} {{ $lecturer->last_name }}
                                         </td>
@@ -108,8 +120,9 @@
                                         transition
                                         duration-150
                                         ease-in-out"">Show</a>
-                                        <a href="{{ route('project.edit', $project->id) }}"
-                                            class="w-full
+                                        @if (Auth::user()->email === $supervisor->email || $level<3)
+                                            <a href="{{ route('project.edit', $project->id) }}"
+                                                class="w-full
                                         px-6
                                         py-2.5
                                         bg-blue-600
@@ -125,7 +138,9 @@
                                         active:bg-blue-800 active:shadow-lg
                                         transition
                                         duration-150
-                                        ease-in-out"">Edit</a>
+                                        ease-in-out">Edit</a>
+                                        @endif
+
                                         @if ($level < 3)
                                             <form class="inline-block"
                                                 action="{{ route('project.destroy', $project->id) }}" method="POST">

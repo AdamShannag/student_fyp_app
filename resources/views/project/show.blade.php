@@ -54,21 +54,27 @@
             <p class="text-gray-700 text-base mb-4">
                 <strong>Student: </strong> {{ $student->first_name }} {{ $student->last_name }}
             </p>
-            <?php $i = 0; ?>
-            @foreach ($project->lecturers as $lecturer)
+            <?php $supervisor = $project
+                ->lecturers()
+                ->where('job', 'supervisor')
+                ->get()[0]; ?>
+            <p class="text-gray-700 text-base mb-4">
+                <strong>Supervisor:</strong> {{ $supervisor->first_name }} {{ $supervisor->last_name }}
+            </p>
+            <?php $examiners = $project
+                ->lecturers()
+                ->where('job', 'examiner')
+                ->get(); ?>
+                <?php $i=1;?>
+            @foreach ($examiners as $lecturer)
                 <p class="text-gray-700 text-base mb-4">
-                    @if ($i === 0)
-                        <strong>Supervisor:</strong> {{ $lecturer->first_name }} {{ $lecturer->last_name }}
-                    @else
-                        <strong>Examiner {{ $i }}: </strong> {{ $lecturer->first_name }}
-                        {{ $lecturer->last_name }}
-                    @endif
-                    <?php $i++; ?>
+                    <strong>Examiner {{ $i++ }}: </strong> {{ $lecturer->first_name }}
+                    {{ $lecturer->last_name }}
                 </p>
             @endforeach
 
             <div class="flex justify-center">
-                <div class="grid grid-cols-2 @if ($level < 3) grid-cols-3 @endif  gap-4 max-w-xl ">
+                <div class="grid grid-cols-auto @if ($level < 3) grid-cols-3 @endif  gap-4 max-w-xl ">
                     <a class="
             w-full
             px-7
@@ -88,6 +94,8 @@
             duration-150
             ease-in-out"
                         href="{{ route('project.index') }}">Back</a>
+                        @if (Auth::user()->email === $supervisor->email || $level<3)
+
                     <a href="{{ route('project.edit', $project->id) }}"
                         class="
                 w-full
@@ -107,6 +115,7 @@
                 transition
                 duration-150
                 ease-in-out">Edit</a>
+                @endif
                     @if ($level < 3)
                         <form class="inline-block" action="{{ route('project.destroy', $project->id) }}"
                             method="POST">

@@ -149,9 +149,17 @@
                         </select>
                     </div>
                 </div>
+                <?php $supervisor = $project
+                ->lecturers()
+                ->where('job', 'supervisor')
+                ->get()[0]; ?>
+                <?php $examiners = $project
+                ->lecturers()
+                ->where('job', 'examiner')
+                ->get(); ?>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Supervisor</label>
-                    <input type="hidden" name="supervisor_id" value={{ $project->lecturers[0]->id }}
+                    <input type="hidden" name="supervisor_id" value={{ $supervisor->id }}
                         @if ($level <= 2) disabled @endif>
                     <select @if ($level > 2) disabled @endif name="supervisor_id"
                         class="form-select appearance-none
@@ -170,9 +178,9 @@
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example">
-                        <option selected value="{{ $project->lecturers[0]->id }}">
-                            {{ $project->lecturers[0]->first_name }} {{ $project->lecturers[0]->last_name }}</option>
-                        @foreach ($lecturers as $lecturer)
+                        <option selected value="{{ $supervisor->id }}">
+                            {{ $supervisor->first_name }} {{ $supervisor->last_name }}</option>
+                        @foreach ($examiners as $lecturer)
                             <option value="{{ $lecturer->id }}">{{ $lecturer->first_name }}
                                 {{ $lecturer->last_name }}
                             </option>
@@ -181,7 +189,7 @@
                 </div>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Examiner 1</label>
-                    <input type="hidden" name="examiner_1_id" value={{ $project->lecturers[1]->id }}
+                    <input type="hidden" name="examiner_1_id" value={{ $examiners[0]->id }}
                         @if ($level <= 2) disabled @endif>
                     <select @if ($level > 2) disabled @endif name="examiner_1_id"
                         class="form-select appearance-none
@@ -200,17 +208,19 @@
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example">
-                        <option selected value="{{ $project->lecturers[1]->id }}">
-                            {{ $project->lecturers[1]->first_name }} {{ $project->lecturers[1]->last_name }}</option>
+                        <option selected value="{{ $examiners[0]->id }}">
+                            {{ $examiners[0]->first_name }} {{ $examiners[0]->last_name }}</option>
                         @foreach ($lecturers as $lecturer)
-                            <option value="{{ $lecturer->id }}">{{ $lecturer->first_name }}
-                                {{ $lecturer->last_name }}</option>
+                        @if ($lecturer->id !== $examiners[0]->id )
+                        <option value="{{ $lecturer->id }}">{{ $lecturer->first_name }}
+                            {{ $lecturer->last_name }}</option>
+                        @endif
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mb-4">
                     <label class="text-gray-700">Examiner 2</label>
-                    <input type="hidden" name="examiner_2_id" value={{ $project->lecturers[2]->id }}
+                    <input type="hidden" name="examiner_2_id" value={{ $examiners[1]->id }}
                         @if ($level <= 2) disabled @endif>
                     <select @if ($level > 2) disabled @endif name="examiner_2_id"
                         class="form-select appearance-none
@@ -229,11 +239,14 @@
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example">
-                        <option selected value="{{ $project->lecturers[2]->id }}">
-                            {{ $project->lecturers[2]->first_name }} {{ $project->lecturers[2]->last_name }}</option>
+                        <option selected value="{{ $examiners[1]->id }}">
+                            {{ $examiners[1]->first_name }} {{ $examiners[1]->last_name }}</option>
                         @foreach ($lecturers as $lecturer)
-                            <option value="{{ $lecturer->id }}">{{ $lecturer->first_name }}
-                                {{ $lecturer->last_name }}</option>
+                        @if ($lecturer->id !== $examiners[1]->id )
+                        <option value="{{ $lecturer->id }}">{{ $lecturer->first_name }}
+                            {{ $lecturer->last_name }}</option>
+                        @endif
+
                         @endforeach
                     </select>
                 </div>
