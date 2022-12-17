@@ -5,6 +5,10 @@
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot>
+        @if (session('error'))
+    <div class="bg-gray-50 rounded-lg py-5 px-6 mb-4 text-base text-gray-500 mb-3" role="alert">
+        {{ session('error') }}</div>
+@endif
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
